@@ -175,9 +175,9 @@ import { ref, reactive } from 'vue'
 
 // Meta tags for SEO
 useHead({
-   title: 'Sign In - Servicio',
+   title: 'Sign In - Servcio',
    meta: [
-      { name: 'description', content: 'Sign in to your Servicio account and access your beauty business dashboard.' }
+      { name: 'description', content: 'Sign in to your Servcio account and access your beauty business dashboard.' }
    ]
 })
 
