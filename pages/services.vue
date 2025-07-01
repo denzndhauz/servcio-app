@@ -1,42 +1,10 @@
 <template>
    <div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
       <!-- Header -->
-      <header class="bg-white shadow-sm border-b border-gray-100">
-         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-               <div class="flex items-center space-x-4">
-                  <div
-                     class="w-10 h-10 bg-gradient-to-r from-purple-600 to-purple-700 rounded-lg flex items-center justify-center">
-                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                           d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                        </path>
-                     </svg>
-                  </div>
-                  <h1 class="text-2xl font-bold text-gray-900">Servicio</h1>
-               </div>
-               <nav class="hidden md:flex space-x-8">
-                  <a href="/dashboard" class="text-gray-500 hover:text-gray-700 font-medium">Dashboard</a>
-                  <a href="/services" class="text-purple-600 font-medium">Services</a>
-                  <a href="/analytics" class="text-gray-500 hover:text-gray-700 font-medium">Analytics</a>
-                  <a href="#" class="text-gray-500 hover:text-gray-700 font-medium">Settings</a>
-               </nav>
-               <div class="flex items-center space-x-4">
-                  <div class="relative">
-                     <div class="w-2 h-2 bg-red-500 rounded-full absolute -top-1 -right-1"></div>
-                     <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                           d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
-                        </path>
-                     </svg>
-                  </div>
-                  <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
-                     <span class="text-white text-sm font-medium">JD</span>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </header>
+      <AppHeader />
+
+      <ServiceModal :is-open="showModal" :service="selectedService" @close="showModal = false"
+         @save="handleSaveService" />
 
       <!-- Main Content -->
       <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -107,7 +75,7 @@
          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                <h3 class="text-lg font-semibold text-gray-900">Current Services</h3>
-               <button @click="showAddModal = true"
+               <button @click="showModal = true"
                   class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center space-x-2">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -123,7 +91,8 @@
                      <div class="flex items-center space-x-4">
                         <div class="w-3 h-3 rounded-full" :class="getStatusColor(service.status)"></div>
                         <div>
-                           <h4 class="font-medium text-gray-900">{{ service.name }} - {{ service.client }}</h4>
+                           <h4 class="font-medium text-gray-900">{{ service.serviceType }} - {{ service.clientName }}
+                           </h4>
                            <p class="text-sm text-gray-500">{{ service.duration }} min remaining • ${{ service.price }}
                            </p>
                         </div>
@@ -132,10 +101,10 @@
                      <div class="flex items-center space-x-3">
                         <select v-model="service.status" @change="updateServiceStatus(service)"
                            class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                           <option value="active">Active</option>
-                           <option value="pending">Pending</option>
-                           <option value="completed">Completed</option>
-                           <option value="cancelled">Cancelled</option>
+                           <option value="Active">Active</option>
+                           <option value="Pending">Pending</option>
+                           <option value="Completed">Completed</option>
+                           <option value="Cancelled">Cancelled</option>
                         </select>
 
                         <button @click="editService(service)"
@@ -161,77 +130,22 @@
             </div>
          </div>
       </main>
-
-      <!-- Add Service Modal -->
-      <div v-if="showAddModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-         <div class="bg-white rounded-xl max-w-md w-full p-6">
-            <div class="flex items-center justify-between mb-4">
-               <h3 class="text-lg font-semibold text-gray-900">Add New Service</h3>
-               <button @click="showAddModal = false" class="text-gray-400 hover:text-gray-600">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                     </path>
-                  </svg>
-               </button>
-            </div>
-
-            <form @submit.prevent="addService" class="space-y-4">
-               <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Service Type</label>
-                  <select v-model="newService.name"
-                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                     <option value="">Select service</option>
-                     <option value="Hair Cut">Hair Cut</option>
-                     <option value="Facial Treatment">Facial Treatment</option>
-                     <option value="Manicure">Manicure</option>
-                     <option value="Pedicure">Pedicure</option>
-                     <option value="Hair Color">Hair Color</option>
-                     <option value="Massage">Massage</option>
-                  </select>
-               </div>
-
-               <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Client Name</label>
-                  <input v-model="newService.client" type="text"
-                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                     placeholder="Enter client name">
-               </div>
-
-               <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Duration (minutes)</label>
-                  <input v-model="newService.duration" type="number"
-                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                     placeholder="e.g., 60">
-               </div>
-
-               <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Price ($)</label>
-                  <input v-model="newService.price" type="number" step="0.01"
-                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                     placeholder="e.g., 45.00">
-               </div>
-
-               <div class="flex space-x-3 pt-4">
-                  <button type="button" @click="showAddModal = false"
-                     class="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors">
-                     Cancel
-                  </button>
-                  <button type="submit"
-                     class="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:shadow-lg transition-all duration-200">
-                     Add Service
-                  </button>
-               </div>
-            </form>
-         </div>
-      </div>
    </div>
 </template>
 
 <script setup>
 // Page meta
 definePageMeta({
-   title: 'Services Management - Servicio'
+   title: 'Services Management - Servcio'
 })
+
+const showModal = ref(false)
+const selectedService = ref(null)
+
+const handleSaveService = (service) => {
+   // Handle saving the service
+   console.log('Saving service:', service)
+}
 
 // Reactive data
 const showAddModal = ref(false)
@@ -239,70 +153,75 @@ const showAddModal = ref(false)
 const services = ref([
    {
       id: 1,
-      name: 'Hair Cut',
-      client: 'John D.',
+      serviceType: 'Hair Cut',
+      clientName: 'John D.',
       duration: 15,
       price: 35,
-      status: 'active'
+      status: 'Active',
+      notes: 'First-time client, prefers a fade cut'
    },
    {
       id: 2,
-      name: 'Facial Treatment',
-      client: 'Sarah M.',
+      serviceType: 'Facial Treatment',
+      clientName: 'Sarah M.',
       duration: 30,
       price: 85,
-      status: 'active'
+      status: 'Active',
+      notes: 'First-time client, prefers a fade cut'
    },
    {
       id: 3,
-      name: 'Manicure',
-      client: 'Lisa K.',
+      serviceType: 'Manicure',
+      clientName: 'Lisa K.',
       duration: 45,
       price: 25,
-      status: 'pending'
+      status: 'Pending',
+      notes: 'First-time client, prefers a fade cut'
    },
    {
       id: 4,
-      name: 'Hair Color',
-      client: 'Emma R.',
+      serviceType: 'Hair Color',
+      clientName: 'Emma R.',
       duration: 0,
       price: 120,
-      status: 'completed'
+      status: 'Completed',
+      notes: 'First-time client, prefers a fade cut'
    },
    {
       id: 5,
-      name: 'Pedicure',
-      client: 'Mike T.',
+      serviceType: 'Pedicure',
+      clientName: 'Mike T.',
       duration: 20,
       price: 40,
-      status: 'active'
+      status: 'Active',
+      notes: 'First-time client, prefers a fade cut'
    }
 ])
 
 const newService = ref({
-   name: '',
-   client: '',
+   serviceType: '',
+   clientName: '',
    duration: '',
    price: '',
-   status: 'pending'
+   status: 'Pending'
 })
 
 // Computed properties
 const activeServicesCount = computed(() =>
-   services.value.filter(s => s.status === 'active').length
+   services.value.filter(s => s.status === 'Active').length
 )
 
 const pendingServicesCount = computed(() =>
-   services.value.filter(s => s.status === 'pending').length
+   services.value.filter(s => s.status === 'Pending').length
 )
 
 const completedTodayCount = computed(() =>
-   services.value.filter(s => s.status === 'completed').length
+   services.value.filter(s => s.status === 'Completed').length
 )
 
 const todayRevenue = computed(() =>
    services.value
-      .filter(s => s.status === 'completed')
+      .filter(s => s.status === 'Completed')
       .reduce((total, s) => total + s.price, 0)
 )
 
@@ -314,7 +233,7 @@ const getStatusColor = (status) => {
       completed: 'bg-blue-500',
       cancelled: 'bg-red-500'
    }
-   return colors[status] || 'bg-gray-500'
+   return colors[status.toLowerCase()] || 'bg-gray-500'
 }
 
 const updateServiceStatus = (service) => {
@@ -335,8 +254,8 @@ const addService = () => {
 
    const service = {
       id: Date.now(),
-      name: newService.value.name,
-      client: newService.value.client,
+      serviceType: newService.value.serviceType,
+      clientName: newService.value.clientName,
       duration: parseInt(newService.value.duration) || 0,
       price: parseFloat(newService.value.price) || 0,
       status: newService.value.status
@@ -346,11 +265,11 @@ const addService = () => {
 
    // Reset form
    newService.value = {
-      name: '',
-      client: '',
+      serviceType: '',
+      clientName: '',
       duration: '',
       price: '',
-      status: 'pending'
+      status: 'Pending'
    }
 
    showAddModal.value = false
@@ -360,7 +279,10 @@ const addService = () => {
 const editService = (service) => {
    // Implement edit functionality
    console.log('Edit service:', service)
-   alert('Edit functionality would open a modal with pre-filled form')
+   // Set the selected service for editing
+   selectedService.value = service
+
+   showModal.value = true
 }
 
 const deleteService = (serviceId) => {
@@ -372,7 +294,7 @@ const deleteService = (serviceId) => {
 
 // Use Nuxt's built-in head management
 useHead({
-   title: 'Services Management - Servicio',
+   title: 'Services Management - Servcio',
    meta: [
       { name: 'description', content: 'Manage your beauty business services with real-time monitoring and updates' }
    ]

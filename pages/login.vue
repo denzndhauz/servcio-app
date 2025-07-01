@@ -32,71 +32,88 @@
 
          <!-- Login Form -->
          <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-white/20">
-            <form @submit.prevent="handleSubmit" class="space-y-6">
-               <!-- Email -->
+            <form @submit.prevent="handleLogin" class="mt-8 space-y-6">
+               <!-- Email Field -->
                <div>
-                  <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                     Email Address
-                  </label>
-                  <input id="email" v-model="form.email" type="email" required
-                     class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                     placeholder="your@email.com" />
+                  <label for="email" class="sr-only">Email address</label>
+                  <input id="email" v-model="form.email" name="email" type="email" autocomplete="email" required
+                     class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                     :class="{ 'border-red-500': errors.email }" placeholder="Email address" />
+                  <p v-if="errors.email" class="mt-1 text-sm text-red-600">
+                     {{ errors.email }}
+                  </p>
                </div>
 
-               <!-- Password -->
+               <!-- Password Field -->
                <div>
-                  <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                     Password
-                  </label>
-                  <div class="relative">
-                     <input id="password" v-model="form.password" :type="showPassword ? 'text' : 'password'" required
-                        class="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                        placeholder="Enter your password" />
-                     <button type="button" @click="showPassword = !showPassword"
-                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
-                        <svg v-if="!showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                        <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L8.464 8.464M14.12 14.12l1.415 1.415" />
-                        </svg>
-                     </button>
-                  </div>
+                  <label for="password" class="sr-only">Password</label>
+                  <input id="password" v-model="form.password" name="password" type="password"
+                     autocomplete="current-password" required
+                     class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                     :class="{ 'border-red-500': errors.password }" placeholder="Password" />
+                  <p v-if="errors.password" class="mt-1 text-sm text-red-600">
+                     {{ errors.password }}
+                  </p>
                </div>
 
-               <!-- Remember Me & Forgot Password -->
+               <!-- Remember Me -->
                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                     <input id="remember" v-model="form.rememberMe" type="checkbox"
-                        class="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500" />
-                     <label for="remember" class="text-sm text-gray-600">
+                  <div class="flex items-center">
+                     <input id="remember-me" v-model="form.rememberMe" name="remember-me" type="checkbox"
+                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+                     <label for="remember-me" class="ml-2 block text-sm text-gray-900">
                         Remember me
                      </label>
                   </div>
-                  <NuxtLink to="/forgot-password" class="text-sm text-purple-600 hover:text-purple-700 font-medium">
-                     Forgot password?
-                  </NuxtLink>
+
+                  <div class="text-sm">
+                     <NuxtLink to="/forgot-password" class="font-medium text-indigo-600 hover:text-indigo-500">
+                        Forgot your password?
+                     </NuxtLink>
+                  </div>
+               </div>
+
+               <!-- Error Message -->
+               <div v-if="loginError" class="rounded-md bg-red-50 p-4">
+                  <div class="flex">
+                     <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">
+                           Login Failed
+                        </h3>
+                        <div class="mt-2 text-sm text-red-700">
+                           {{ loginError }}
+                        </div>
+                     </div>
+                  </div>
                </div>
 
                <!-- Submit Button -->
-               <button type="submit" :disabled="isLoading"
-                  class="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold py-3 px-6 rounded-xl hover:from-purple-700 hover:to-purple-800 focus:ring-4 focus:ring-purple-300 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
-                  <span v-if="!isLoading">Sign In</span>
-                  <span v-else class="flex items-center justify-center gap-2">
-                     <svg class="animate-spin w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                        </circle>
-                        <path class="opacity-75" fill="currentColor"
-                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                        </path>
-                     </svg>
-                     Signing In...
-                  </span>
-               </button>
+               <div>
+                  <button type="submit" :disabled="isLoading || !isFormValid"
+                     class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                     <span v-if="isLoading" class="absolute left-0 inset-y-0 flex items-center pl-3">
+                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                           viewBox="0 0 24 24">
+                           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                           </circle>
+                           <path class="opacity-75" fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                           </path>
+                        </svg>
+                     </span>
+                     {{ isLoading ? 'Signing in...' : 'Sign in' }}
+                  </button>
+               </div>
+
+               <!-- Register Link -->
+               <div class="text-center">
+                  <p class="text-sm text-gray-600">
+                     Don't have an account?
+                     <NuxtLink to="/register" class="font-medium text-indigo-600 hover:text-indigo-500">
+                        Sign up here
+                     </NuxtLink>
+                  </p>
+               </div>
             </form>
 
             <!-- Divider -->
@@ -173,13 +190,19 @@
 <script setup>
 import { ref, reactive } from 'vue'
 
+definePageMeta({
+   middleware: 'guest'
+})
+
 // Meta tags for SEO
 useHead({
-   title: 'Sign In - Servicio',
+   title: 'Sign In - Servcio',
    meta: [
-      { name: 'description', content: 'Sign in to your Servicio account and access your beauty business dashboard.' }
+      { name: 'description', content: 'Sign in to your Servcio account and access your beauty business dashboard.' }
    ]
 })
+
+const { login, isLoading } = useAuth()
 
 // Form state
 const form = reactive({
@@ -188,27 +211,91 @@ const form = reactive({
    rememberMe: false
 })
 
+// Error handling
+const loginError = ref('')
+const errors = reactive({
+   email: '',
+   password: ''
+})
+
+// Form validation
+const isFormValid = computed(() => {
+   return form.email.length > 0 &&
+      form.password.length > 0 &&
+      isValidEmail(form.email)
+})
+
+// Email validation helper
+const isValidEmail = (email) => {
+   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+   return emailRegex.test(email)
+}
+
+// Clear errors when form changes
+watch(() => form.email, () => {
+   errors.email = ''
+   loginError.value = ''
+})
+
+watch(() => form.password, () => {
+   errors.password = ''
+   loginError.value = ''
+})
+
 const showPassword = ref(false)
-const isLoading = ref(false)
 
 // Form submission handler
-const handleSubmit = async () => {
-   isLoading.value = true
+const handleLogin = async () => {
+   // Clear previous errors
+   loginError.value = ''
+   errors.email = ''
+   errors.password = ''
+
+   // Validate form
+   if (!form.email) {
+      errors.email = 'Email is required'
+      return
+   }
+
+   if (!isValidEmail(form.email)) {
+      errors.email = 'Please enter a valid email address'
+      return
+   }
+
+   if (!form.password) {
+      errors.password = 'Password is required'
+      return
+   }
+
+   if (form.password.length < 6) {
+      errors.password = 'Password must be at least 6 characters'
+      return
+   }
 
    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      // Call the login function from useAuth
+      await login({
+         email: form.email,
+         password: form.password
+      })
 
-      // Here you would typically make an API call to authenticate the user
-      console.log('Login data:', form)
+      // Success! User will be redirected automatically by the login function
+      // You can add additional success handling here if needed
+      console.log('Login successful!')
 
-      // Redirect to dashboard
-      await navigateTo('/dashboard')
    } catch (error) {
-      console.error('Login failed:', error)
-      alert('Login failed. Please check your credentials and try again.')
-   } finally {
-      isLoading.value = false
+      // Handle login errors
+      loginError.value = error.message || 'An error occurred during login'
+
+      // Handle specific error types
+      if (error.message?.includes('Invalid credentials')) {
+         errors.email = 'Invalid email or password'
+         errors.password = 'Invalid email or password'
+      } else if (error.message?.includes('email')) {
+         errors.email = error.message
+      } else if (error.message?.includes('password')) {
+         errors.password = error.message
+      }
    }
 }
 </script>

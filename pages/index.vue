@@ -14,7 +14,7 @@
                            </path>
                         </svg>
                      </div>
-                     <span class="ml-3 text-xl font-bold text-gray-900">Servicio</span>
+                     <span class="ml-3 text-xl font-bold text-gray-900">Servcio</span>
                   </div>
                   <div class="hidden md:ml-10 md:flex md:space-x-8">
                      <a href="#features"
@@ -55,7 +55,7 @@
                         in Real-Time
                      </h1>
                      <p class="text-xl text-gray-600 leading-relaxed">
-                        Servicio helps spas, barber shops, and salons track service quality, monitor customer
+                        Servcio helps spas, barber shops, and salons track service quality, monitor customer
                         satisfaction, and optimize operations with powerful analytics.
                      </p>
                   </div>
@@ -208,7 +208,7 @@
          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                <h2 class="text-4xl font-bold text-gray-900 mb-4">Loved by Beauty Professionals</h2>
-               <p class="text-xl text-gray-600">See what our customers say about Servicio</p>
+               <p class="text-xl text-gray-600">See what our customers say about Servcio</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -242,7 +242,7 @@
       <section id="contact" class="py-20 bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700">
          <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-4xl font-bold text-white mb-4">Ready to Transform Your Business?</h2>
-            <p class="text-xl text-purple-100 mb-8">Join hundreds of beauty professionals who trust Servicio</p>
+            <p class="text-xl text-purple-100 mb-8">Join hundreds of beauty professionals who trust Servcio</p>
 
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
                <button @click="startTrial"
@@ -273,7 +273,7 @@
                            </path>
                         </svg>
                      </div>
-                     <span class="ml-2 text-lg font-bold">Servicio</span>
+                     <span class="ml-2 text-lg font-bold">Servcio</span>
                   </div>
                   <p class="text-gray-400 text-sm">Monitoring beauty businesses with precision and care.</p>
                </div>
@@ -324,7 +324,7 @@
             </div>
 
             <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-               <p>&copy; 2025 Servicio. All rights reserved. | Privacy Policy | Terms of Service</p>
+               <p>&copy; 2025 Servcio. All rights reserved. | Privacy Policy | Terms of Service</p>
             </div>
          </div>
       </footer>
@@ -334,7 +334,7 @@
 <script setup>
 // Page meta
 useHead({
-   title: 'Servicio - Service Monitoring for Beauty Businesses',
+   title: 'Servcio - Service Monitoring for Beauty Businesses',
    meta: [
       { name: 'description', content: 'Monitor your spa, barber shop, or salon with real-time analytics, customer satisfaction tracking, and powerful business insights.' }
    ]
@@ -447,7 +447,7 @@ const testimonials = [
    {
       name: 'Maria Rodriguez',
       business: 'Elegant Spa & Wellness',
-      content: 'Servicio transformed how we manage our spa. Customer satisfaction is up 40% since we started using their monitoring system.'
+      content: 'Servcio transformed how we manage our spa. Customer satisfaction is up 40% since we started using their monitoring system.'
    },
    {
       name: 'James Wilson',
@@ -478,23 +478,5 @@ const startTrial = () => {
 const contactSales = () => {
    // In a real app, this would open a contact form modal
    alert('Contact sales form would open here!')
-}
-</script>
-
-<script>
-// Define icon components for features
-const MonitorIcon = {
-   template: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 64 64">
-  <rect x="8" y="8" width="48" height="32" rx="4" fill="#4A4A4A"/>
-  <rect x="16" y="16" width="32" height="16" rx="2" fill="#FFFFFF"/>
-  <rect x="24" y="44" width="16" height="4" rx="1" fill="#4A4A4A"/>
-  <rect x="20" y="50" width="24" height="4" rx="1" fill="#6B6B6B"/>
-</svg>`
-}
-
-export default {
-   components: {
-      MonitorIcon,
-   }
 }
 </script>

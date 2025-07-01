@@ -203,9 +203,9 @@ import { ref, reactive } from 'vue'
 
 // Meta tags for SEO
 useHead({
-   title: 'Register - Servicio',
+   title: 'Register - Servcio',
    meta: [
-      { name: 'description', content: 'Create your Servicio account and start monitoring your beauty business in real-time.' }
+      { name: 'description', content: 'Create your Servcio account and start monitoring your beauty business in real-time.' }
    ]
 })
 
